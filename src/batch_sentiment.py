@@ -1,3 +1,4 @@
+import torch
 import pandas as pd
 from transformers import pipeline
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score

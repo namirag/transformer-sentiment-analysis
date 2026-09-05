@@ -1,5 +1,8 @@
 import streamlit as st
+import pandas as pd
 from transformers import pipeline
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
 from src.batch_sentiment import analyze_csv
 
 #loading the pipeline
@@ -37,6 +40,38 @@ if uploaded_file:
     st.write("Precision:", f"{precision:.2%}")
     st.write("Recall:", f"{recall:.2%}")
     st.write("F1 Score:", f"{f1:.2%}")
+    
+    # confusion matrix
+    cm = confusion_matrix(
+    result_df["label"],
+    result_df["sentiment"])
+    
+    # st.write("### Confusion Matrix")
+    # st.dataframe(
+    #     pd.DataFrame(
+    #         cm,
+    #         index=["Actual NEGATIVE", "Actual POSITIVE"],
+    #         columns=["Predicted NEGATIVE", "Predicted POSITIVE"]
+    #     )
+    # )
+    
+    fig, ax = plt.subplots()
+    ax.imshow(cm)
+
+    ax.set_xticks([0, 1])
+    ax.set_yticks([0, 1])
+    ax.set_xticklabels(["Predicted NEGATIVE", "Predicted POSITIVE"])
+    ax.set_yticklabels(["Actual NEGATIVE", "Actual POSITIVE"])
+
+    for i in range(2):
+        for j in range(2):
+            ax.text(j, i, cm[i, j], ha="center", va="center")
+
+    ax.set_title("Confusion Matrix")
+    ax.set_xlabel("Predicted Label")
+    ax.set_ylabel("Actual Label")
+
+    st.pyplot(fig)
 
 
     # adding a summary of the sentiment analysis
